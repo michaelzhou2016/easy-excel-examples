@@ -3,9 +3,10 @@ package ai.guiji.easyexcel.examples.service.impl;
 import ai.guiji.easyexcel.examples.entity.PlanCallPhone;
 import ai.guiji.easyexcel.examples.mapper.PlanCallPhoneMapper;
 import ai.guiji.easyexcel.examples.service.PhoneService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,5 +28,11 @@ public class PhoneServiceImpl implements PhoneService {
     public void batchAdd(List<PlanCallPhone> phoneList) {
         int num = planCallPhoneMapper.addPlanPhoneBatch(phoneList);
         log.info("insert num:{}", num);
+    }
+
+    @Override
+    public PageInfo<PlanCallPhone> selectPage(int pageNo, int pageSize) {
+        PageHelper.startPage(pageNo, pageSize);
+        return new PageInfo<>(planCallPhoneMapper.selectAll());
     }
 }
