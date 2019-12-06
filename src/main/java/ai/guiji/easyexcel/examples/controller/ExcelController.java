@@ -8,6 +8,7 @@ import ai.guiji.easyexcel.examples.utils.DownloadUtil;
 import com.alibaba.excel.EasyExcel;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +34,15 @@ import java.util.stream.Collectors;
 public class ExcelController {
     @Autowired
     private PhoneService phoneService;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @PostMapping("/excel/read")
     public void readExcel(@RequestParam("file") MultipartFile file) {
         try {
             DemoExcelListener excelListener = new DemoExcelListener(new StopWatch(UUID.randomUUID().toString()));
             excelListener.setPhoneService(phoneService);
+            excelListener.setRedissonClient(redissonClient);
             EasyExcel.read(file.getInputStream(), DemoExcelTemp.class, excelListener)
                     .sheet()
                     .headRowNumber(1)

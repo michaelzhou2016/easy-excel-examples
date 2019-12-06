@@ -9,5 +9,7 @@ public interface PhoneService {
 
     void batchAdd(List<PlanCallPhone> phoneList);
 
+    void batchAddAsync(List<PlanCallPhone> phoneList);
+
     PageInfo<PlanCallPhone> selectPage(int pageNo, int pageSize);
 }

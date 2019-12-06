@@ -7,6 +7,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,12 @@ public class PhoneServiceImpl implements PhoneService {
     public void batchAdd(List<PlanCallPhone> phoneList) {
         int num = planCallPhoneMapper.addPlanPhoneBatch(phoneList);
         log.info("insert num:{}", num);
+    }
+
+    @Async
+    @Override
+    public void batchAddAsync(List<PlanCallPhone> phoneList) {
+
     }
 
     @Override

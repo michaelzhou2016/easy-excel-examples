@@ -7,6 +7,8 @@ import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.redisson.api.RBlockingDeque;
+import org.redisson.api.RedissonClient;
 import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
@@ -21,6 +23,8 @@ public class DemoExcelListener extends AnalysisEventListener<DemoExcelTemp> {
     private StopWatch stopWatch;
 
     private PhoneService phoneService;
+
+    private RedissonClient redissonClient;
 
     public DemoExcelListener() {
     }
@@ -44,11 +48,14 @@ public class DemoExcelListener extends AnalysisEventListener<DemoExcelTemp> {
     @Override
     public void invoke(DemoExcelTemp execlObj, AnalysisContext context) {
 //        log.info("解析到一条数据:{}", JSON.toJSONString(execlObj));
-        phoneList.add(new PlanCallPhone(execlObj.getPhone(), execlObj.getCustName(), execlObj.getCustCompany()));
-        if (phoneList.size() >= BATCH_COUNT) {
-            phoneService.batchAdd(phoneList);
-            phoneList.clear();
-        }
+//        phoneList.add(new PlanCallPhone(execlObj.getPhone(), execlObj.getCustName(), execlObj.getCustCompany()));
+//        if (phoneList.size() >= BATCH_COUNT) {
+//            phoneService.batchAdd(phoneList);
+//            phoneList.clear();
+//        }
+
+        RBlockingDeque<PlanCallPhone> deque = redissonClient.getBlockingDeque("phoneDeque");
+        deque.offerLast(new PlanCallPhone(execlObj.getPhone(), execlObj.getCustName(), execlObj.getCustCompany()));
     }
 
     /**
@@ -60,10 +67,10 @@ public class DemoExcelListener extends AnalysisEventListener<DemoExcelTemp> {
     public void doAfterAllAnalysed(AnalysisContext context) {
         stopWatch.stop();
 //        log.info(stopWatch.prettyPrint());
-        if (CollectionUtils.isNotEmpty(phoneList)) {
-            phoneService.batchAdd(phoneList);
-            phoneList.clear();
-        }
+//        if (CollectionUtils.isNotEmpty(phoneList)) {
+//            phoneService.batchAdd(phoneList);
+//            phoneList.clear();
+//        }
         log.info("{}ms", stopWatch.getTotalTimeMillis());
 //        log.info("所有数据解析完成！");
     }
@@ -82,5 +89,13 @@ public class DemoExcelListener extends AnalysisEventListener<DemoExcelTemp> {
 
     public void setPhoneService(PhoneService phoneService) {
         this.phoneService = phoneService;
+    }
+
+    public RedissonClient getRedissonClient() {
+        return redissonClient;
+    }
+
+    public void setRedissonClient(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
 }
