@@ -1,6 +1,7 @@
 package ai.guiji.easyexcel.examples.runner;
 
 import ai.guiji.easyexcel.examples.entity.PlanCallPhone;
+import ai.guiji.easyexcel.examples.service.PhoneService;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RedissonClient;
@@ -21,15 +22,18 @@ import java.util.Objects;
 public class MyRunner implements ApplicationRunner {
     @Autowired
     private RedissonClient redissonClient;
+    @Autowired
+    private PhoneService phoneService;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        while (true) {
-            RBlockingDeque<PlanCallPhone> deque = redissonClient.getBlockingDeque("phoneDeque");
-            PlanCallPhone planCallPhone = deque.pollFirst();
-            if (Objects.nonNull(planCallPhone)) {
-                log.info(planCallPhone.getPhone());
+        RBlockingDeque<PlanCallPhone> deque = redissonClient.getBlockingDeque("phoneDeque");
+        new Thread(() -> {
+            while (true) {
+                if (deque.size() > 0) {
+                    phoneService.batchAddAsync(deque);
+                }
             }
-        }
+        }).start();
     }
 }

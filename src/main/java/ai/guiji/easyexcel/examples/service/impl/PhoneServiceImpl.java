@@ -6,12 +6,16 @@ import ai.guiji.easyexcel.examples.service.PhoneService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.redisson.api.RBlockingDeque;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * author: zhouliliang
@@ -33,8 +37,20 @@ public class PhoneServiceImpl implements PhoneService {
 
     @Async
     @Override
-    public void batchAddAsync(List<PlanCallPhone> phoneList) {
+    public void batchAddAsync(RBlockingDeque<PlanCallPhone> deque) {
+        List<PlanCallPhone> phoneList = new ArrayList<>(10);
+        int size = 0;
+        while (size < 10 && deque.size() > 0) {
+            PlanCallPhone planCallPhone = deque.pollFirst();
+            if (Objects.nonNull(planCallPhone)) {
+                phoneList.add(planCallPhone);
+                size++;
+            }
+        }
 
+        if (CollectionUtils.isNotEmpty(phoneList)) {
+            batchAdd(phoneList);
+        }
     }
 
     @Override
