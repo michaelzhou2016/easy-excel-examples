@@ -2,11 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ai.guiji.easyexcel.examples.mapper.PlanCallPhoneMapper">
   <resultMap id="BaseResultMap" type="ai.guiji.easyexcel.examples.entity.PlanCallPhone">
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="seq_id" jdbcType="BIGINT" property="seqId" />
+    <result column="plan_id" jdbcType="INTEGER" property="planId" />
+    <result column="plan_sub_id" jdbcType="BIGINT" property="planSubId" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="tts_params" jdbcType="VARCHAR" property="ttsParams" />
+    <result column="params" jdbcType="VARCHAR" property="params" />
+    <result column="status_call" jdbcType="INTEGER" property="statusCall" />
+    <result column="status_flow" jdbcType="INTEGER" property="statusFlow" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="region_code" jdbcType="VARCHAR" property="regionCode" />
+    <result column="region_name" jdbcType="VARCHAR" property="regionName" />
+    <result column="line_id" jdbcType="VARCHAR" property="lineId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="cust_name" jdbcType="VARCHAR" property="custName" />
     <result column="cust_company" jdbcType="VARCHAR" property="custCompany" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="org_id" jdbcType="INTEGER" property="orgId" />
+    <result column="join_user" jdbcType="INTEGER" property="joinUser" />
     <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="upd_time" jdbcType="TIMESTAMP" property="updTime" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="call_id" jdbcType="VARCHAR" property="callId" />
+    <result column="call_start_time" jdbcType="TIMESTAMP" property="callStartTime" />
+    <result column="hangup_time" jdbcType="TIMESTAMP" property="hangupTime" />
+    <result column="answer_time" jdbcType="TIMESTAMP" property="answerTime" />
+    <result column="duration" jdbcType="INTEGER" property="duration" />
+    <result column="bill_sec" jdbcType="INTEGER" property="billSec" />
+    <result column="hangup_type" jdbcType="INTEGER" property="hangupType" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="f_reason" jdbcType="INTEGER" property="fReason" />
+    <result column="dialogue_round" jdbcType="INTEGER" property="dialogueRound" />
+    <result column="is_read" jdbcType="INTEGER" property="isRead" />
+    <result column="recall_num" jdbcType="INTEGER" property="recallNum" />
+    <result column="already_num" jdbcType="INTEGER" property="alreadyNum" />
+    <result column="callback_time" jdbcType="TIMESTAMP" property="callbackTime" />
+    <result column="del_time" jdbcType="TIMESTAMP" property="delTime" />
+    <result column="del_user" jdbcType="INTEGER" property="delUser" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +99,11 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, phone, cust_name, cust_company, add_time
+    seq_id, plan_id, plan_sub_id, phone, tts_params, params, status_call, status_flow, 
+    result, region_code, region_name, line_id, remark, cust_name, cust_company, user_id, 
+    org_id, join_user, add_time, upd_time, del_flag, call_id, call_start_time, hangup_time, 
+    answer_time, duration, bill_sec, hangup_type, reason, f_reason, dialogue_round, is_read, 
+    recall_num, already_num, callback_time, del_time, del_user
   </sql>
   <select id="selectByExample" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhoneExample" resultMap="BaseResultMap">
     select
@@ -76,7 +112,7 @@
     </if>
     'false' as QUERYID,
     <include refid="Base_Column_List" />
-    from plan_call_phone
+    from t_oss_plan_call_phone
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,36 +120,81 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from plan_call_phone
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from plan_call_phone
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
   <delete id="deleteByExample" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhoneExample">
-    delete from plan_call_phone
+    delete from t_oss_plan_call_phone
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhone">
-    insert into plan_call_phone (id, phone, cust_name, 
-      cust_company, add_time)
-    values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR}, 
-      #{custCompany,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP})
+    insert into t_oss_plan_call_phone (seq_id, plan_id, plan_sub_id, 
+      phone, tts_params, params, 
+      status_call, status_flow, result, 
+      region_code, region_name, line_id, 
+      remark, cust_name, cust_company, 
+      user_id, org_id, join_user, 
+      add_time, upd_time, del_flag, 
+      call_id, call_start_time, hangup_time, 
+      answer_time, duration, bill_sec, 
+      hangup_type, reason, f_reason, 
+      dialogue_round, is_read, recall_num, 
+      already_num, callback_time, del_time, 
+      del_user)
+    values (#{seqId,jdbcType=BIGINT}, #{planId,jdbcType=INTEGER}, #{planSubId,jdbcType=BIGINT}, 
+      #{phone,jdbcType=VARCHAR}, #{ttsParams,jdbcType=VARCHAR}, #{params,jdbcType=VARCHAR}, 
+      #{statusCall,jdbcType=INTEGER}, #{statusFlow,jdbcType=INTEGER}, #{result,jdbcType=VARCHAR}, 
+      #{regionCode,jdbcType=VARCHAR}, #{regionName,jdbcType=VARCHAR}, #{lineId,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{custName,jdbcType=VARCHAR}, #{custCompany,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER}, #{joinUser,jdbcType=INTEGER}, 
+      #{addTime,jdbcType=TIMESTAMP}, #{updTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=INTEGER}, 
+      #{callId,jdbcType=VARCHAR}, #{callStartTime,jdbcType=TIMESTAMP}, #{hangupTime,jdbcType=TIMESTAMP}, 
+      #{answerTime,jdbcType=TIMESTAMP}, #{duration,jdbcType=INTEGER}, #{billSec,jdbcType=INTEGER}, 
+      #{hangupType,jdbcType=INTEGER}, #{reason,jdbcType=VARCHAR}, #{fReason,jdbcType=INTEGER}, 
+      #{dialogueRound,jdbcType=INTEGER}, #{isRead,jdbcType=INTEGER}, #{recallNum,jdbcType=INTEGER}, 
+      #{alreadyNum,jdbcType=INTEGER}, #{callbackTime,jdbcType=TIMESTAMP}, #{delTime,jdbcType=TIMESTAMP}, 
+      #{delUser,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhone">
-    insert into plan_call_phone
+    insert into t_oss_plan_call_phone
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
+      <if test="seqId != null">
+        seq_id,
+      </if>
+      <if test="planId != null">
+        plan_id,
+      </if>
+      <if test="planSubId != null">
+        plan_sub_id,
       </if>
       <if test="phone != null">
         phone,
+      </if>
+      <if test="ttsParams != null">
+        tts_params,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+      <if test="statusCall != null">
+        status_call,
+      </if>
+      <if test="statusFlow != null">
+        status_flow,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="regionCode != null">
+        region_code,
+      </if>
+      <if test="regionName != null">
+        region_name,
+      </if>
+      <if test="lineId != null">
+        line_id,
+      </if>
+      <if test="remark != null">
+        remark,
       </if>
       <if test="custName != null">
         cust_name,
@@ -121,16 +202,112 @@
       <if test="custCompany != null">
         cust_company,
       </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="joinUser != null">
+        join_user,
+      </if>
       <if test="addTime != null">
         add_time,
       </if>
+      <if test="updTime != null">
+        upd_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="callId != null">
+        call_id,
+      </if>
+      <if test="callStartTime != null">
+        call_start_time,
+      </if>
+      <if test="hangupTime != null">
+        hangup_time,
+      </if>
+      <if test="answerTime != null">
+        answer_time,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="billSec != null">
+        bill_sec,
+      </if>
+      <if test="hangupType != null">
+        hangup_type,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="fReason != null">
+        f_reason,
+      </if>
+      <if test="dialogueRound != null">
+        dialogue_round,
+      </if>
+      <if test="isRead != null">
+        is_read,
+      </if>
+      <if test="recallNum != null">
+        recall_num,
+      </if>
+      <if test="alreadyNum != null">
+        already_num,
+      </if>
+      <if test="callbackTime != null">
+        callback_time,
+      </if>
+      <if test="delTime != null">
+        del_time,
+      </if>
+      <if test="delUser != null">
+        del_user,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
+      <if test="seqId != null">
+        #{seqId,jdbcType=BIGINT},
+      </if>
+      <if test="planId != null">
+        #{planId,jdbcType=INTEGER},
+      </if>
+      <if test="planSubId != null">
+        #{planSubId,jdbcType=BIGINT},
       </if>
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ttsParams != null">
+        #{ttsParams,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCall != null">
+        #{statusCall,jdbcType=INTEGER},
+      </if>
+      <if test="statusFlow != null">
+        #{statusFlow,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="regionCode != null">
+        #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null">
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="lineId != null">
+        #{lineId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
       </if>
       <if test="custName != null">
         #{custName,jdbcType=VARCHAR},
@@ -138,25 +315,121 @@
       <if test="custCompany != null">
         #{custCompany,jdbcType=VARCHAR},
       </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="joinUser != null">
+        #{joinUser,jdbcType=INTEGER},
+      </if>
       <if test="addTime != null">
         #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updTime != null">
+        #{updTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="callId != null">
+        #{callId,jdbcType=VARCHAR},
+      </if>
+      <if test="callStartTime != null">
+        #{callStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hangupTime != null">
+        #{hangupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answerTime != null">
+        #{answerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="billSec != null">
+        #{billSec,jdbcType=INTEGER},
+      </if>
+      <if test="hangupType != null">
+        #{hangupType,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="fReason != null">
+        #{fReason,jdbcType=INTEGER},
+      </if>
+      <if test="dialogueRound != null">
+        #{dialogueRound,jdbcType=INTEGER},
+      </if>
+      <if test="isRead != null">
+        #{isRead,jdbcType=INTEGER},
+      </if>
+      <if test="recallNum != null">
+        #{recallNum,jdbcType=INTEGER},
+      </if>
+      <if test="alreadyNum != null">
+        #{alreadyNum,jdbcType=INTEGER},
+      </if>
+      <if test="callbackTime != null">
+        #{callbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delTime != null">
+        #{delTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delUser != null">
+        #{delUser,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhoneExample" resultType="java.lang.Long">
-    select count(*) from plan_call_phone
+    select count(*) from t_oss_plan_call_phone
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update plan_call_phone
+    update t_oss_plan_call_phone
     <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=BIGINT},
+      <if test="record.seqId != null">
+        seq_id = #{record.seqId,jdbcType=BIGINT},
+      </if>
+      <if test="record.planId != null">
+        plan_id = #{record.planId,jdbcType=INTEGER},
+      </if>
+      <if test="record.planSubId != null">
+        plan_sub_id = #{record.planSubId,jdbcType=BIGINT},
       </if>
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ttsParams != null">
+        tts_params = #{record.ttsParams,jdbcType=VARCHAR},
+      </if>
+      <if test="record.params != null">
+        params = #{record.params,jdbcType=VARCHAR},
+      </if>
+      <if test="record.statusCall != null">
+        status_call = #{record.statusCall,jdbcType=INTEGER},
+      </if>
+      <if test="record.statusFlow != null">
+        status_flow = #{record.statusFlow,jdbcType=INTEGER},
+      </if>
+      <if test="record.result != null">
+        result = #{record.result,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regionCode != null">
+        region_code = #{record.regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.regionName != null">
+        region_name = #{record.regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lineId != null">
+        line_id = #{record.lineId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
       </if>
       <if test="record.custName != null">
         cust_name = #{record.custName,jdbcType=VARCHAR},
@@ -164,8 +437,71 @@
       <if test="record.custCompany != null">
         cust_company = #{record.custCompany,jdbcType=VARCHAR},
       </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.orgId != null">
+        org_id = #{record.orgId,jdbcType=INTEGER},
+      </if>
+      <if test="record.joinUser != null">
+        join_user = #{record.joinUser,jdbcType=INTEGER},
+      </if>
       <if test="record.addTime != null">
         add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updTime != null">
+        upd_time = #{record.updTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delFlag != null">
+        del_flag = #{record.delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.callId != null">
+        call_id = #{record.callId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.callStartTime != null">
+        call_start_time = #{record.callStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.hangupTime != null">
+        hangup_time = #{record.hangupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.answerTime != null">
+        answer_time = #{record.answerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.duration != null">
+        duration = #{record.duration,jdbcType=INTEGER},
+      </if>
+      <if test="record.billSec != null">
+        bill_sec = #{record.billSec,jdbcType=INTEGER},
+      </if>
+      <if test="record.hangupType != null">
+        hangup_type = #{record.hangupType,jdbcType=INTEGER},
+      </if>
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fReason != null">
+        f_reason = #{record.fReason,jdbcType=INTEGER},
+      </if>
+      <if test="record.dialogueRound != null">
+        dialogue_round = #{record.dialogueRound,jdbcType=INTEGER},
+      </if>
+      <if test="record.isRead != null">
+        is_read = #{record.isRead,jdbcType=INTEGER},
+      </if>
+      <if test="record.recallNum != null">
+        recall_num = #{record.recallNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.alreadyNum != null">
+        already_num = #{record.alreadyNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.callbackTime != null">
+        callback_time = #{record.callbackTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delTime != null">
+        del_time = #{record.delTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.delUser != null">
+        del_user = #{record.delUser,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -173,53 +509,83 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update plan_call_phone
-    set id = #{record.id,jdbcType=BIGINT},
+    update t_oss_plan_call_phone
+    set seq_id = #{record.seqId,jdbcType=BIGINT},
+      plan_id = #{record.planId,jdbcType=INTEGER},
+      plan_sub_id = #{record.planSubId,jdbcType=BIGINT},
       phone = #{record.phone,jdbcType=VARCHAR},
+      tts_params = #{record.ttsParams,jdbcType=VARCHAR},
+      params = #{record.params,jdbcType=VARCHAR},
+      status_call = #{record.statusCall,jdbcType=INTEGER},
+      status_flow = #{record.statusFlow,jdbcType=INTEGER},
+      result = #{record.result,jdbcType=VARCHAR},
+      region_code = #{record.regionCode,jdbcType=VARCHAR},
+      region_name = #{record.regionName,jdbcType=VARCHAR},
+      line_id = #{record.lineId,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
       cust_name = #{record.custName,jdbcType=VARCHAR},
       cust_company = #{record.custCompany,jdbcType=VARCHAR},
-      add_time = #{record.addTime,jdbcType=TIMESTAMP}
+      user_id = #{record.userId,jdbcType=INTEGER},
+      org_id = #{record.orgId,jdbcType=INTEGER},
+      join_user = #{record.joinUser,jdbcType=INTEGER},
+      add_time = #{record.addTime,jdbcType=TIMESTAMP},
+      upd_time = #{record.updTime,jdbcType=TIMESTAMP},
+      del_flag = #{record.delFlag,jdbcType=INTEGER},
+      call_id = #{record.callId,jdbcType=VARCHAR},
+      call_start_time = #{record.callStartTime,jdbcType=TIMESTAMP},
+      hangup_time = #{record.hangupTime,jdbcType=TIMESTAMP},
+      answer_time = #{record.answerTime,jdbcType=TIMESTAMP},
+      duration = #{record.duration,jdbcType=INTEGER},
+      bill_sec = #{record.billSec,jdbcType=INTEGER},
+      hangup_type = #{record.hangupType,jdbcType=INTEGER},
+      reason = #{record.reason,jdbcType=VARCHAR},
+      f_reason = #{record.fReason,jdbcType=INTEGER},
+      dialogue_round = #{record.dialogueRound,jdbcType=INTEGER},
+      is_read = #{record.isRead,jdbcType=INTEGER},
+      recall_num = #{record.recallNum,jdbcType=INTEGER},
+      already_num = #{record.alreadyNum,jdbcType=INTEGER},
+      callback_time = #{record.callbackTime,jdbcType=TIMESTAMP},
+      del_time = #{record.delTime,jdbcType=TIMESTAMP},
+      del_user = #{record.delUser,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhone">
-    update plan_call_phone
-    <set>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="custName != null">
-        cust_name = #{custName,jdbcType=VARCHAR},
-      </if>
-      <if test="custCompany != null">
-        cust_company = #{custCompany,jdbcType=VARCHAR},
-      </if>
-      <if test="addTime != null">
-        add_time = #{addTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="ai.guiji.easyexcel.examples.entity.PlanCallPhone">
-    update plan_call_phone
-    set phone = #{phone,jdbcType=VARCHAR},
-      cust_name = #{custName,jdbcType=VARCHAR},
-      cust_company = #{custCompany,jdbcType=VARCHAR},
-      add_time = #{addTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <insert id="addPlanPhoneBatch">
-    INSERT INTO plan_call_phone(phone, cust_name,cust_company)
+    INSERT INTO t_oss_plan_call_phone
+    (
+    seq_id,
+    plan_id,
+    plan_sub_id,
+    phone,
+    tts_params,
+    params,
+    status_call,
+    status_flow,
+    cust_name,
+    cust_company,
+    user_id,
+    org_id,
+    join_user,
+    add_time
+    )
     values
     <foreach collection="list" item="item" index="index" separator=",">
-      (#{item.phone,jdbcType=VARCHAR}, #{item.custName,jdbcType=VARCHAR}, #{item.custCompany,jdbcType=VARCHAR})
+      ( #{item.seqId,jdbcType=BIGINT},
+      #{item.planId,jdbcType=INTEGER},
+      #{item.planSubId},
+      #{item.phone,jdbcType=VARCHAR},
+      #{item.ttsParams,jdbcType=VARCHAR},
+      #{item.params,jdbcType=VARCHAR},
+      #{item.statusCall,jdbcType=INTEGER},
+      #{item.statusFlow,jdbcType=INTEGER},
+      #{item.custName,jdbcType=VARCHAR},
+      #{item.custCompany,jdbcType=VARCHAR},
+      #{item.userId,jdbcType=INTEGER},
+      #{item.orgId,jdbcType=INTEGER},
+      #{item.joinUser},
+      #{item.addTime,jdbcType=TIMESTAMP}
+      )
     </foreach>
   </insert>
-  <select id="selectAll" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from plan_call_phone
-  </select>
-
 </mapper>

@@ -29,7 +29,7 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="ai.guiji.easyexcel.examples.mapper"
                              targetProject="./src/main/java"/>
 
-        <table tableName="plan_call_phone" domainObjectName="PlanCallPhone" enableCountByExample="true"
+        <table tableName="t_oss_plan_call_phone" domainObjectName="PlanCallPhone" enableCountByExample="true"
                enableUpdateByExample="true"
                enableDeleteByExample="true"
                enableSelectByExample="true"
