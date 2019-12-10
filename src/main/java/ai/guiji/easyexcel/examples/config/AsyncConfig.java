@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 
 /**
@@ -33,7 +34,17 @@ public class AsyncConfig implements AsyncConfigurer {
 
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
 
-        return new MyAsyncExceptionHandler();
+        return new AsyncUncaughtExceptionHandler() {
+            public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
+                log.info("-------------》》》捕获线程异常信息");
+                log.info("Exception message - ", throwable);
+                log.info("Method name - " + method.getName());
+                for (Object param : obj) {
+                    log.info("Parameter value - " + param);
+                }
+            }
+        };
+
     }
 
 
