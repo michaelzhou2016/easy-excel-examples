@@ -35,11 +35,12 @@ public class AsyncConfig implements AsyncConfigurer {
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
 
         return new AsyncUncaughtExceptionHandler() {
-            public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
+            @Override
+            public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
                 log.info("-------------》》》捕获线程异常信息");
                 log.info("Exception message - ", throwable);
                 log.info("Method name - " + method.getName());
-                for (Object param : obj) {
+                for (Object param : objects) {
                     log.info("Parameter value - " + param);
                 }
             }
