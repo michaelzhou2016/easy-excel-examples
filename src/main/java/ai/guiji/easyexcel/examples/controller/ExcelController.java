@@ -4,6 +4,7 @@ import ai.guiji.easyexcel.examples.dto.DemoExcelTemp;
 import ai.guiji.easyexcel.examples.dto.PlanImportExeclTemp;
 import ai.guiji.easyexcel.examples.entity.PlanCallPhone;
 import ai.guiji.easyexcel.examples.listener.DemoExcelListener;
+import ai.guiji.easyexcel.examples.listener.ImportExcelListener;
 import ai.guiji.easyexcel.examples.service.PhoneService;
 import ai.guiji.easyexcel.examples.utils.DownloadUtil;
 import com.alibaba.excel.EasyExcel;
@@ -49,6 +50,24 @@ public class ExcelController {
 
             DemoExcelListener excelListener = new DemoExcelListener(new StopWatch(UUID.randomUUID().toString()));
             excelListener.setPhoneService(phoneService);
+            EasyExcel.read(file.getInputStream(), PlanImportExeclTemp.class, excelListener)
+                    .sheet()
+                    .headRowNumber(1)
+                    .doRead();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @PostMapping("/excel/read2")
+    public void readExcel2(@RequestParam("file") MultipartFile file) {
+        try {
+            String importKey = "414_17827081833349376";
+            STOP_WATCH_MAP.put(importKey, new StopWatch(importKey)); //记录解析Excel花费时间
+            String consumeKey = importKey + "_consume";
+            STOP_WATCH_MAP.put(consumeKey, new StopWatch(consumeKey)); //记录消费队列数据花费时间
+
+            ImportExcelListener excelListener = new ImportExcelListener(414, 17827081833349376L);
             EasyExcel.read(file.getInputStream(), PlanImportExeclTemp.class, excelListener)
                     .sheet()
                     .headRowNumber(1)

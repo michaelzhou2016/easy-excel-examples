@@ -8,6 +8,7 @@ import org.springframework.util.StopWatch;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
 public class MapConstant {
@@ -19,5 +20,10 @@ public class MapConstant {
 
     public static final Map<String, StopWatch> STOP_WATCH_MAP = new ConcurrentHashMap<>();
 
-    public static final Map<String, ExecutorService> EXECUTOR_MAP = new ConcurrentHashMap<>();
+//    public static final Map<String, ExecutorService> EXECUTOR_MAP = new ConcurrentHashMap<>();
+
+    public final static String planImportKey = "planImportKey_";
+    //导入队列
+    public static Map<String, ConcurrentLinkedQueue<PlanCallPhone>> IMPORT_QUEUE
+            = new ConcurrentHashMap<String, ConcurrentLinkedQueue<PlanCallPhone>>();
 }

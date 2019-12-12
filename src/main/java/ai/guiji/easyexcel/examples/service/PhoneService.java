@@ -5,6 +5,7 @@ import ai.guiji.easyexcel.examples.entity.PlanCallPhone;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface PhoneService {
 
@@ -13,4 +14,9 @@ public interface PhoneService {
     /*void batchAddAsync(RBlockingDeque<PlanCallPhone> deque);*/
 
     PageInfo<PlanCallPhone> selectPage(int pageNo, int pageSize);
+
+    //批量号码队列加入流程
+    void importPlanPhoneProcBatch(String importKey, ConcurrentLinkedQueue<PlanCallPhone> importQueue, int batchSize);
+
+    void importBatch(String importKey, List<PlanCallPhone> phoneList);
 }
