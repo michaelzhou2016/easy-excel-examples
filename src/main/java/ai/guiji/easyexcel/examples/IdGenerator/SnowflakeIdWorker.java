@@ -1,13 +1,10 @@
 package ai.guiji.easyexcel.examples.IdGenerator;
 
-import com.google.common.collect.HashMultiset;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Twitter_Snowflake<br>
@@ -21,19 +18,18 @@ import java.util.stream.Collectors;
  * 加起来刚好64位，为一个Long型。<br>
  * SnowFlake的优点是，整体上按照时间自增排序，并且整个分布式系统内不会产生ID碰撞(由数据中心ID和机器ID作区分)，并且效率较高，经测试，SnowFlake每秒能够产生26万ID左右。
  */
+//@20191212 恢复时间截到毫秒，增加3位。 缩减workerId到3位， 缩减orgId到14位 。 时间截占位为38
 @Configuration
 @Component
 public class SnowflakeIdWorker {
 
     // ==============================Fields===========================================
-    /**
-     * 开始时间截 (2017-11-01)
-     */
+    /** 开始时间截 (2017-11-01) */
     public static final long twepoch = 1509465600000L;
 
-    public static final long workerIdBits = 5L;
+    public static final long workerIdBits = 3L;
 
-    public static final long orgCodeIdBits = 15L;
+    public static final long orgCodeIdBits = 14L;
 
     public static final long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
@@ -53,7 +49,7 @@ public class SnowflakeIdWorker {
 
     public static final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
-    private static long workerId = 5;
+    private static long workerId=5;
 
     private static long orgId;
 
@@ -78,20 +74,26 @@ public class SnowflakeIdWorker {
     }
 
     @Value("${server.id:1}")
-    public void setWorkerId(long workerId) {
+    public void setWorkerId(long workerId)
+    {
         SnowflakeIdWorker.workerId = workerId;
     }
     // ==============================Methods==========================================
-
     /**
      * 获得下一个ID (该方法是线程安全的)
-     *
      * @return SnowflakeId
      */
     public synchronized static long nextId(long orgId) {
+        if (workerId > maxWorkerId || workerId < 0) {
+            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
+        }
+        if (orgId > maxDatacenterId || orgId < 0) {
+            throw new IllegalArgumentException(String.format("orgCode Id can't be greater than %d or less than 0", maxDatacenterId));
+        }
+
         long timestamp = currentMillis();
 
-        long minus = timestamp - lastTimestamp;
+        long minus = (timestamp - lastTimestamp);
         //如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
         if (minus < 0) {
             throw new RuntimeException(
@@ -116,7 +118,7 @@ public class SnowflakeIdWorker {
         lastTimestamp = timestamp;
 
         //移位并通过或运算拼到一起组成64位的ID
-        return (timestamp - twepoch << timestampShift) //
+        return ((timestamp - twepoch) << timestampShift) //
                 | (orgId << dataCenterIdShift) //
                 | (workerId << workerIdShift) //
 //                | (sequence << sequenceIdShift)
@@ -126,7 +128,7 @@ public class SnowflakeIdWorker {
 
     protected static long tilNextMillis(long lastTimestamp) {
         long timestamp = currentMillis();
-        while (timestamp - lastTimestamp <= 0) {
+        while ((timestamp-lastTimestamp) <= 0) {
             timestamp = currentMillis();
         }
         return timestamp;
@@ -134,7 +136,6 @@ public class SnowflakeIdWorker {
 
     /**
      * 返回以毫秒为单位的当前时间
-     *
      * @return 当前时间(毫秒)
      */
     protected static long currentMillis() {
@@ -142,16 +143,15 @@ public class SnowflakeIdWorker {
     }
 
 
-    //==============================Test=============================================
 
-    /**
-     * 测试
-     */
-    public static void main(String[] args) throws ParseException {
+    //==============================Test=============================================
+    /** 测试 */
+    public static void main(String[] args) throws ParseException
+    {
 
         long value = 40317281061831143L;
 
-//        SnowflakeIdWorker idWorker = new SnowflakeIdWorker();
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker();
 //        for (int i = 0; i < 1000; i++) {
 //            value = SnowflakeIdWorker.nextId(6);
 //
@@ -159,26 +159,7 @@ public class SnowflakeIdWorker {
 ////
 ////            System.out.println(IdUtils.doParse(11536524554323431);
 //        }
-//        System.out.println(IdUtils.doParse(11536655819252483L));
-
-        HashMultiset<Long> multiset = HashMultiset.create();
-        for (int i = 0; i < 500000; i++) {
-            long l = SnowflakeIdWorker.nextId(120);
-            multiset.add(l);
-
-//      System.out.println(value + "::::" +IdUtils.doParse(value).getSequence());
-//
-            System.out.println(IdUtils.doParse(l));
-        }
-
-//        for (Long temp : multiset.elementSet()) {
-//            if (multiset.count(temp) > 1) {
-//                System.out.println(temp + ":" + multiset.count(temp));
-//            }
-//        }
-
-        Set<Long> set = multiset.elementSet().stream().filter(e -> multiset.count(e) > 1).collect(Collectors.toSet());
-        System.out.println(set.size());
+        System.out.println(IdUtils.doParse(11536655819252483L));
     }
 
 }

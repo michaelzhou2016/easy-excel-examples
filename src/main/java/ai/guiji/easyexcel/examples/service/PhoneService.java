@@ -19,4 +19,6 @@ public interface PhoneService {
     void importPlanPhoneProcBatch(String importKey, ConcurrentLinkedQueue<PlanCallPhone> importQueue, int batchSize);
 
     void importBatch(String importKey, List<PlanCallPhone> phoneList);
+
+    void importPlanPhoneProc(PlanCallPhone phoneData, String importKey);
 }

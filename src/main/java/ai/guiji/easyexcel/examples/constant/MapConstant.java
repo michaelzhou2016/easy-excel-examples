@@ -24,6 +24,6 @@ public class MapConstant {
 
     public final static String planImportKey = "planImportKey_";
     //导入队列
-    public static Map<String, ConcurrentLinkedQueue<PlanCallPhone>> IMPORT_QUEUE
+    public static Map<String, ConcurrentLinkedQueue<PlanCallPhone>> IMPORT_QUEUE_MAP
             = new ConcurrentHashMap<String, ConcurrentLinkedQueue<PlanCallPhone>>();
 }

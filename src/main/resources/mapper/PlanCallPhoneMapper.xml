@@ -588,4 +588,197 @@
       )
     </foreach>
   </insert>
+  <insert id="addPlanPhone">
+    INSERT INTO t_oss_plan_call_phone
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seqId != null">
+        seq_id,
+      </if>
+      <if test="planId != null">
+        plan_id,
+      </if>
+      <if test="planSubId != null">
+        plan_sub_id,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="ttsParams != null">
+        tts_params,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+      <if test="statusCall != null">
+        status_call,
+      </if>
+      <if test="statusFlow != null">
+        status_flow,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="regionCode != null">
+        region_code,
+      </if>
+      <if test="regionName != null">
+        region_name,
+      </if>
+      <if test="lineId != null">
+        line_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="custName != null">
+        cust_name,
+      </if>
+      <if test="custCompany != null">
+        cust_company,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="joinUser != null">
+        join_user,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updTime != null">
+        upd_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="callId != null">
+        call_id,
+      </if>
+      <if test="callStartTime != null">
+        call_start_time,
+      </if>
+      <if test="hangupTime != null">
+        hangup_time,
+      </if>
+      <if test="answerTime != null">
+        answer_time,
+      </if>
+      <if test="duration != null">
+        duration,
+      </if>
+      <if test="billSec != null">
+        bill_sec,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="fReason != null">
+        f_reason,
+      </if>
+      <if test="recallNum != null">
+        recall_num,
+      </if>
+      <if test="alreadyNum != null">
+        already_num,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seqId != null">
+        #{seqId,jdbcType=BIGINT},
+      </if>
+      <if test="planId != null">
+        #{planId,jdbcType=INTEGER},
+      </if>
+      <if test="planSubId != null">
+        #{planSubId},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ttsParams != null">
+        #{ttsParams,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCall != null">
+        #{statusCall,jdbcType=INTEGER},
+      </if>
+      <if test="statusFlow != null">
+        #{statusFlow,jdbcType=INTEGER},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="regionCode != null">
+        #{regionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="regionName != null">
+        #{regionName,jdbcType=VARCHAR},
+      </if>
+      <if test="lineId != null">
+        #{lineId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null">
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="custCompany != null">
+        #{custCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="joinUser != null">
+        #{joinUser},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updTime != null">
+        #{updTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="callId != null">
+        #{callId,jdbcType=VARCHAR},
+      </if>
+      <if test="callStartTime != null">
+        #{callStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hangupTime != null">
+        #{hangupTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="answerTime != null">
+        #{answerTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="duration != null">
+        #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="billSec != null">
+        #{billSec,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="fReason != null">
+        #{fReason,jdbcType=INTEGER},
+      </if>
+      <if test="recallNum != null">
+        #{recallNum,jdbcType=INTEGER},
+      </if>
+      <if test="alreadyNum != null">
+        #{alreadyNum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
 </mapper>

@@ -10,6 +10,7 @@ import ai.guiji.easyexcel.examples.enums.PlanPhoneStatusEnum;
 import ai.guiji.easyexcel.examples.mapper.PlanCallPhoneMapper;
 import ai.guiji.easyexcel.examples.service.IPlanCallPhoneBatchService;
 import ai.guiji.easyexcel.examples.service.PhoneService;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -280,7 +280,8 @@ public class PhoneServiceImpl implements PhoneService {
         } catch (Exception e) {
             log.error("新增号码批量入库异常:", e);
             phoneList.forEach(callPhone -> {
-                IMPORT_QUEUE.get(importKey).offer(callPhone);
+                callPhone.setSeqId(SnowflakeIdWorker.nextId(callPhone.getOrgId()));
+                IMPORT_QUEUE_MAP.get(importKey).offer(callPhone);
                 ATOMIC_LONG_MAP.decrementAndGet(importKey + "_consume_num");
             });
         }
@@ -289,13 +290,16 @@ public class PhoneServiceImpl implements PhoneService {
     @Async
     @Override
     public void importBatch(String importKey, List<PlanCallPhone> phoneList) {
+        String importKeyCopy = importKey;
+        List<PlanCallPhone> phoneListCopy = phoneList;
         try {
             //批量入库
             planCallPhoneBatchService.addPlanPhoneBatch(phoneList, importKey);
         } catch (Exception e) {
             log.error("新增号码批量入库异常:", e);
-            phoneList.forEach(callPhone -> {
-                IMPORT_QUEUE.get(importKey).offer(callPhone);
+            phoneListCopy.forEach(callPhone -> {
+                callPhone.setSeqId(SnowflakeIdWorker.nextId(callPhone.getOrgId()));
+                IMPORT_QUEUE_MAP.get(importKeyCopy).offer(callPhone);
             });
         }
     }
@@ -312,4 +316,28 @@ public class PhoneServiceImpl implements PhoneService {
             mutableSize.add(1);
         }
     }
+
+
+    @Async
+    @Override
+    public void importPlanPhoneProc(PlanCallPhone phoneData, String importKey) {
+        try {
+            log.info("导入数据:{}", JSON.toJSONString(phoneData));
+            if (null != phoneData) {
+                Date currentTime = new Date();
+                //校验黑名单(数量递减)
+
+                //校验机器人(数量递减)
+
+                phoneData.setAddTime(currentTime);
+                //入库
+                planCallPhoneMapper.addPlanPhone(phoneData);
+
+//                ATOMIC_LONG_MAP.incrementAndGet(importKey + "_inserted_num");
+            }
+        } catch (Exception e) {
+            log.error("新增号码入库异常:", e);
+        }
+    }
+
 }

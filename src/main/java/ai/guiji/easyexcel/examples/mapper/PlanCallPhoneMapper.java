@@ -21,4 +21,7 @@ public interface PlanCallPhoneMapper {
     int updateByExample(@Param("record") PlanCallPhone record, @Param("example") PlanCallPhoneExample example);
 
     int addPlanPhoneBatch(@Param("list") List<PlanCallPhone> list);
+
+    //新增拨打号码
+    int addPlanPhone(PlanCallPhone planPhone);
 }

@@ -10,7 +10,6 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -36,7 +35,7 @@ public class ImportExcelListener extends AnalysisEventListener<PlanImportExeclTe
         this.planId = planId;
         this.planSubId = planSubId;
         this.importKey = planId + "_" + planSubId;
-        IMPORT_QUEUE.put(importKey, new ConcurrentLinkedQueue<>());
+        IMPORT_QUEUE_MAP.put(importKey, new ConcurrentLinkedQueue<>());
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ImportExcelListener extends AnalysisEventListener<PlanImportExeclTe
             return;
         }
 
-        IMPORT_QUEUE.get(importKey).offer(phoneData);
+        IMPORT_QUEUE_MAP.get(importKey).offer(phoneData);
         ATOMIC_LONG_MAP.incrementAndGet(importKey + "_plan_num");
         phoneSet.add(phone);
     }
@@ -140,11 +139,11 @@ public class ImportExcelListener extends AnalysisEventListener<PlanImportExeclTe
         Instant startInstant = Instant.now();
 
         while (ATOMIC_LONG_MAP.get(importKey + "_inserted_num") < plan_num) {
-            Instant endInstant = Instant.now();
-            Duration duration = Duration.between(startInstant, endInstant);
-            if (duration.getSeconds() > 10L) {
-                break;
-            }
+//            Instant endInstant = Instant.now();
+//            Duration duration = Duration.between(startInstant, endInstant);
+//            if (duration.getSeconds() > 10L) {
+//                break;
+//            }
 
             try {
                 TimeUnit.MILLISECONDS.sleep(10);
@@ -169,6 +168,6 @@ public class ImportExcelListener extends AnalysisEventListener<PlanImportExeclTe
         ATOMIC_LONG_MAP.remove(importKey + "_inserted_num");
         ATOMIC_LONG_MAP.remove(importKey + "_all_analysed");
 
-        IMPORT_QUEUE.remove(importKey);
+        IMPORT_QUEUE_MAP.remove(importKey);
     }
 }
